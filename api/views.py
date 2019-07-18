@@ -1,8 +1,6 @@
-from rest_framework import viewsets
-from .permissions import IsAdminUser, IsAdminUser, IsLoggedInUserOrAdmin
-from rest_framework.permissions import AllowAny
-from django.contrib.auth.models import User
-
+from rest_framework import routers, serializers, viewsets
+from api.models.Resource import Resource
+from api.serializers import ResourceSerializer
 
 ''' Permissions:
 
@@ -12,16 +10,6 @@ from django.contrib.auth.models import User
     Logged in user can only retrieve/update his own profile.
 '''
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-
-    def get_permissions(self):
-        permission_classes = []
-        if self.action == 'create':
-            permission_classes = [AllowAny]
-        elif self.action == 'retrieve' or self.action == 'update' or self.action == 'partial_update':
-            permission_classes = [IsLoggedInUserOrAdmin]
-        elif self.action == 'list' or self.action == 'destroy':
-            permission_classes = [IsAdminUser]
-        
-        return [permission() for permission in permission_classes]
+class ResourceViewSet(viewsets.ModelViewSet):
+    queryset = Resource.objects.all()
+    serializer_class = ResourceSerializer
