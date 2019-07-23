@@ -1,6 +1,7 @@
 from rest_framework import routers, serializers, viewsets
 from api.models.Resource import Resource
 from api.serializers import ResourceSerializer
+from rest_framework.permissions import IsAuthenticated
 
 ''' Permissions:
 
@@ -11,5 +12,6 @@ from api.serializers import ResourceSerializer
 '''
 
 class ResourceViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
