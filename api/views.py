@@ -15,3 +15,10 @@ class ResourceViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
+
+    # Limit GET queries to respond only with
+    # info of the current user
+    def get_queryset(self):
+        queryset = self.queryset
+        query_set = queryset.filter(user=self.request.user)
+        return query_set
