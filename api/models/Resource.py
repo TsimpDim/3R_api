@@ -17,6 +17,8 @@ class Resource(models.Model):
     tags = ArrayField(models.CharField(max_length=60), blank=True, null=True)
 
     date_of_creation = models.DateField(auto_now=True) # Automatically set field every time an object is created
+    
+    visible= models.BooleanField(default=True)
 
     def __str__(self):
         return f"[{self.user}] {self.title}"

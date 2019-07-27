@@ -2,6 +2,7 @@ from rest_framework import routers, serializers, viewsets
 from api.models.Resource import Resource
 from api.serializers import ResourceSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 ''' Permissions:
 
@@ -17,8 +18,13 @@ class ResourceViewSet(viewsets.ModelViewSet):
     serializer_class = ResourceSerializer
 
     # Limit GET queries to respond only with
-    # info of the current user
+    # visible (not-deleted) resources of the current user
     def get_queryset(self):
         queryset = self.queryset
-        query_set = queryset.filter(user=self.request.user)
-        return query_set
+        # If superuser return every resource
+        # visible or not
+        if self.request.user.is_superuser:
+            return queryset
+        else:
+            query_set = queryset.filter(user=self.request.user).filter(visible=True)
+            return query_set
