@@ -20,20 +20,20 @@ class ResourceViewSet(viewsets.ModelViewSet):
     serializer_class = ResourceSerializer
 
     # Limit GET queries to respond only with
-    # visible (not-deleted) resources of the current user
+    # visible (not-removed) resources of the current user
     def get_queryset(self):
         queryset = self.queryset
-        # If superuser return every resource
-        # visible or not
-        if self.request.user.is_superuser:
-            return queryset
-        else:
-            query_set = queryset.filter(user=self.request.user).filter(visible=True)
-            return query_set
+        query_set = queryset.filter(user=self.request.user).filter(visible=True)
+        return query_set
 
-    # List view for not-visible (deleted) resources
-    @action(detail=False)
-    def deleted(self, request):
-        deleted_resources = Resource.objects.all().filter(user=self.request.user).filter(visible=False)
-        serializer = ResourceSerializer(deleted_resources, many=True)
-        return Response(serializer.data)
+
+class RemovedResourceViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = Resource.objects.all()
+    serializer_class = ResourceSerializer
+
+    # Perhaps these can be condensed in one line above?
+    def get_queryset(self):
+        queryset = self.queryset
+        query_set = queryset.filter(user=self.request.user).filter(visible=False)
+        return query_set

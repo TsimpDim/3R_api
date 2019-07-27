@@ -1,9 +1,10 @@
 from rest_framework import routers
 from django.urls import path, include
-from api.views import ResourceViewSet
+from api.views import ResourceViewSet, RemovedResourceViewSet
 
 router = routers.DefaultRouter()
 router.register(r'resources', ResourceViewSet)
+router.register(r'trash', RemovedResourceViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
