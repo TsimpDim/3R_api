@@ -1,8 +1,10 @@
 from rest_framework import routers, serializers, viewsets
 from api.models.Resource import Resource
+from rest_framework.response import Response
 from api.serializers import ResourceSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from django.contrib.auth.models import User
 
 ''' Permissions:
 
@@ -28,3 +30,10 @@ class ResourceViewSet(viewsets.ModelViewSet):
         else:
             query_set = queryset.filter(user=self.request.user).filter(visible=True)
             return query_set
+
+    # List view for not-visible (deleted) resources
+    @action(detail=False)
+    def deleted(self, request):
+        deleted_resources = Resource.objects.all().filter(user=self.request.user).filter(visible=False)
+        serializer = ResourceSerializer(deleted_resources, many=True)
+        return Response(serializer.data)
