@@ -19,7 +19,7 @@ class Resource(models.Model):
     )
 
     url = models.URLField(max_length=200) # Default max_length is 200
-    note = models.CharField(max_length=300, blank=True, null=True)
+    note = models.CharField(max_length=300, blank=True, null=False, default=str)
 
     # ArrayField is a Postgres only field (check the import)
     # Docs here: https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#arrayfield
@@ -27,7 +27,7 @@ class Resource(models.Model):
         models.CharField(
             max_length=60,
             blank=True,
-            null=True,
+            null=False,
             validators=[ # Validator for every CharField in array
                 RegexValidator(
                     regex=r"^[A-Za-z0-9_ \u0370-\u03ff\u1f00-\u1fff]*$",
@@ -35,7 +35,8 @@ class Resource(models.Model):
                 )
             ]
         ),
-        validators=[validate_no_duplicates] # Validator for the ArrayField as a whole
+        validators=[validate_no_duplicates], # Validator for the ArrayField as a whole
+        default=list
     )
 
     date_of_creation = models.DateField(auto_now=True) # Automatically set field every time an object is created
