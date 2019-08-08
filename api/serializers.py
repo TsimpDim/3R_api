@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from api.models.Resource import Resource
+from api.models.Option import Option
 from django.contrib.auth.models import User
 
 '''
@@ -20,3 +21,10 @@ class ResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resource
         fields = '__all__' # ['id', 'title', 'url', 'note', 'tags', 'date_of_creation']
+
+
+class OptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Option
+        fields = ['sort']

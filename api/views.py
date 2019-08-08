@@ -1,10 +1,13 @@
 from rest_framework import routers, serializers, viewsets
 from api.models.Resource import Resource
+from api.models.Option import Option
 from rest_framework.response import Response
-from api.serializers import ResourceSerializer
+from api.serializers import ResourceSerializer, OptionSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
+import rest_framework.generics as gen
+from django.shortcuts import get_object_or_404
 
 ''' Permissions:
 
@@ -37,3 +40,16 @@ class RemovedResourceViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         query_set = queryset.filter(user=self.request.user).filter(visible=False)
         return query_set
+
+class OptionRetrieveUpdateView(gen.RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = OptionSerializer
+
+    def get_queryset(self):
+        return Option.objects.filter(user_id=self.request.user)
+
+    # This allows us to get a single object instead of a single object in an array
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, user=self.request.user)
+        return obj
