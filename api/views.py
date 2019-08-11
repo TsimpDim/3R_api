@@ -26,8 +26,20 @@ class ResourceViewSet(viewsets.ModelViewSet):
     # visible (not-removed) resources of the current user
     def get_queryset(self):
         queryset = self.queryset
-        query_set = queryset.filter(user=self.request.user).filter(visible=True)
-        return query_set
+        queryset = queryset.filter(user=self.request.user).filter(visible=True)
+        
+        options = Option.objects.get(user=self.request.user)
+
+        if options.sort == 'AAS':
+            queryset = queryset.order_by('title')
+        elif options.sort == 'ADE':
+            queryset = queryset.order_by('-title')
+        elif options.sort == 'TAS':
+            queryset = queryset.order_by('date_of_creation')
+        elif options.sort == 'TDE':
+            queryset = queryset.order_by('-date_of_creation')
+
+        return queryset
 
 
 class RemovedResourceViewSet(viewsets.ModelViewSet):
