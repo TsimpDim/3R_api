@@ -50,8 +50,8 @@ class RemovedResourceViewSet(viewsets.ModelViewSet):
     # Perhaps these can be condensed in one line above?
     def get_queryset(self):
         queryset = self.queryset
-        query_set = queryset.filter(user=self.request.user).filter(visible=False)
-        return query_set
+        queryset = queryset.filter(user=self.request.user).filter(visible=False).order_by('-date_of_creation')
+        return queryset
 
 class OptionRetrieveUpdateView(gen.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
