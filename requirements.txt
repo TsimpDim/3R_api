@@ -24,7 +24,7 @@ api == 0.0.7
 # api/serializers.py: 1
 # api/urls.py: 1
 # api/views.py: 1,4
-djangorestframework == 3.9.1
+djangorestframework == 3.11.2
 
 # config/urls.py: 3
 djangorestframework_jwt == 1.11.0
