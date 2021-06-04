@@ -14,7 +14,7 @@
 # config/urls.py: 2
 # config/wsgi.py: 12
 # manage.py: 8
-Django == 2.2.4
+Django == 2.2.21
 
 # api/admin.py: 4
 # api/urls.py: 3
